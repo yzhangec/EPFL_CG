@@ -1,0 +1,15 @@
+<map id="/home/eason/Desktop/assignment_0/src/Scene.cpp" name="/home/eason/Desktop/assignment_0/src/Scene.cpp">
+<area shape="rect" id="node2" href="$Scene_8h.html" title="Scene.h" alt="" coords="459,95,530,121"/>
+<area shape="rect" id="node22" href="$Plane_8h.html" title="Plane.h" alt="" coords="5,95,72,121"/>
+<area shape="rect" id="node23" href="$Sphere_8h.html" title="Sphere.h" alt="" coords="217,95,292,121"/>
+<area shape="rect" id="node24" href="$Cylinder_8h.html" title="Cylinder.h" alt="" coords="317,95,398,121"/>
+<area shape="rect" id="node25" href="$Mesh_8h.html" title="Mesh.h" alt="" coords="554,95,619,121"/>
+<area shape="rect" id="node3" href="$StopWatch_8h.html" title="StopWatch.h" alt="" coords="1003,169,1101,196"/>
+<area shape="rect" id="node6" href="$Object_8h.html" title="Object.h" alt="" coords="249,169,319,196"/>
+<area shape="rect" id="node7" href="$Ray_8h.html" title="Ray.h" alt="" coords="395,244,453,271"/>
+<area shape="rect" id="node12" href="$Material_8h.html" title="Material.h" alt="" coords="477,244,555,271"/>
+<area shape="rect" id="node15" href="$Light_8h.html" title="Light.h" alt="" coords="693,169,755,196"/>
+<area shape="rect" id="node16" href="$Image_8h.html" title="Image.h" alt="" coords="779,169,848,196"/>
+<area shape="rect" id="node19" href="$Camera_8h.html" title="Camera.h" alt="" coords="590,169,669,196"/>
+<area shape="rect" id="node8" href="$vec3_8h.html" title="Implements the vector class and its mathematical operations. " alt="" coords="485,319,547,345"/>
+</map>
