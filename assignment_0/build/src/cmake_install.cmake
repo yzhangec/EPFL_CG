@@ -1,4 +1,4 @@
-# Install script for directory: /home/eason/Desktop/assignment_0/src
+# Install script for directory: /home/eason/Desktop/EPFL_CG/assignment_0/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -4,13 +4,13 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/eason/Desktop/assignment_0/src/Cylinder.cpp" "/home/eason/Desktop/assignment_0/build/src/CMakeFiles/raytrace.dir/Cylinder.cpp.o"
-  "/home/eason/Desktop/assignment_0/src/Mesh.cpp" "/home/eason/Desktop/assignment_0/build/src/CMakeFiles/raytrace.dir/Mesh.cpp.o"
-  "/home/eason/Desktop/assignment_0/src/Plane.cpp" "/home/eason/Desktop/assignment_0/build/src/CMakeFiles/raytrace.dir/Plane.cpp.o"
-  "/home/eason/Desktop/assignment_0/src/Scene.cpp" "/home/eason/Desktop/assignment_0/build/src/CMakeFiles/raytrace.dir/Scene.cpp.o"
-  "/home/eason/Desktop/assignment_0/src/Sphere.cpp" "/home/eason/Desktop/assignment_0/build/src/CMakeFiles/raytrace.dir/Sphere.cpp.o"
-  "/home/eason/Desktop/assignment_0/src/raytrace.cpp" "/home/eason/Desktop/assignment_0/build/src/CMakeFiles/raytrace.dir/raytrace.cpp.o"
-  "/home/eason/Desktop/assignment_0/src/vec3.cpp" "/home/eason/Desktop/assignment_0/build/src/CMakeFiles/raytrace.dir/vec3.cpp.o"
+  "/home/eason/Desktop/EPFL_CG/assignment_0/src/Cylinder.cpp" "/home/eason/Desktop/EPFL_CG/assignment_0/build/src/CMakeFiles/raytrace.dir/Cylinder.cpp.o"
+  "/home/eason/Desktop/EPFL_CG/assignment_0/src/Mesh.cpp" "/home/eason/Desktop/EPFL_CG/assignment_0/build/src/CMakeFiles/raytrace.dir/Mesh.cpp.o"
+  "/home/eason/Desktop/EPFL_CG/assignment_0/src/Plane.cpp" "/home/eason/Desktop/EPFL_CG/assignment_0/build/src/CMakeFiles/raytrace.dir/Plane.cpp.o"
+  "/home/eason/Desktop/EPFL_CG/assignment_0/src/Scene.cpp" "/home/eason/Desktop/EPFL_CG/assignment_0/build/src/CMakeFiles/raytrace.dir/Scene.cpp.o"
+  "/home/eason/Desktop/EPFL_CG/assignment_0/src/Sphere.cpp" "/home/eason/Desktop/EPFL_CG/assignment_0/build/src/CMakeFiles/raytrace.dir/Sphere.cpp.o"
+  "/home/eason/Desktop/EPFL_CG/assignment_0/src/raytrace.cpp" "/home/eason/Desktop/EPFL_CG/assignment_0/build/src/CMakeFiles/raytrace.dir/raytrace.cpp.o"
+  "/home/eason/Desktop/EPFL_CG/assignment_0/src/vec3.cpp" "/home/eason/Desktop/EPFL_CG/assignment_0/build/src/CMakeFiles/raytrace.dir/vec3.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

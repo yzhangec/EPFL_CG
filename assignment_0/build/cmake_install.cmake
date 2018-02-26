@@ -1,4 +1,4 @@
-# Install script for directory: /home/eason/Desktop/assignment_0
+# Install script for directory: /home/eason/Desktop/EPFL_CG/assignment_0
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/eason/Desktop/assignment_0/build/src/cmake_install.cmake")
+  include("/home/eason/Desktop/EPFL_CG/assignment_0/build/src/cmake_install.cmake")
 
 endif()
 
@@ -46,5 +46,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/eason/Desktop/assignment_0/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/eason/Desktop/EPFL_CG/assignment_0/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
