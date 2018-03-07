@@ -43,7 +43,18 @@ intersect(const Ray& _ray,
  * - return whether there is an intersection in front of the viewer (t > 0)
 */
 
-    return false;
+	// (_ray.direction*t + _ray.origin - center) dot normal = 0
+
+	double dot1 = dot(normal, _ray.direction);
+	double dot2 = dot( (center - _ray.origin) , normal);
+
+	if (dot1 < 1e-7 && dot1 > -1e-7) return false;
+	
+	_intersection_t = dot2/dot1;
+	_intersection_point = _ray(_intersection_t);
+	_intersection_normal = normal;
+
+	return (_intersection_t > 0) ? true : false;
 }
 
 
