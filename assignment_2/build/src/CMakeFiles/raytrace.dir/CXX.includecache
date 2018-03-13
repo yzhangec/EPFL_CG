@@ -95,6 +95,8 @@ vec3.h
 /home/eason/Desktop/EPFL_CG/assignment_2/src/Scene.cpp
 Scene.h
 /home/eason/Desktop/EPFL_CG/assignment_2/src/Scene.h
+iostream
+-
 Plane.h
 /home/eason/Desktop/EPFL_CG/assignment_2/src/Plane.h
 Sphere.h
