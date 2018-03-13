@@ -156,7 +156,7 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
     	} //if shadow, continue
     	vec3 diffuse_color = light.color * _material.diffuse * dot(_normal, normalize(light.position));
     	vec3 specular_color = light.color * _material.specular 
-    							* pow(dot(_view, normalize(mirror(light.position, _normal))), 											_material.shininess);
+    							* pow(dot(_view, normalize(mirror(normalize(light.position), _normal))), 											_material.shininess);
 
     	color += diffuse_color + specular_color;
     }

@@ -55,21 +55,23 @@ intersect(const Ray&  _ray,
 			intersect_point_arr[intersect_num] = _ray(sol[i]);
 			intersection_normal_arr[intersect_num] 
 				= normalize(_ray(sol[i]) - center - (dot(_ray.direction,axis)*sol[i]+dot(o_c,axis)) * axis);
+			if (dot(_ray.direction,intersection_normal_arr[intersect_num]) > 0)
+				intersection_normal_arr[intersect_num] = -intersection_normal_arr[intersect_num];
 			intersect_num++;
 		}
 	}
 	
-	if (sol_num == 2) {
-		if (sol[0] > 0 && sol[1] > 0) {
-			double minSol = (sol[0]<sol[1])?sol[0]:sol[1];
-			double maxSol = (sol[0]>sol[1])?sol[0]:sol[1];
-			
-			if ((dot((_ray(minSol) - center), axis) > height/2 || dot((_ray(minSol) - center), axis) < -height/2) 
-			 && (dot((_ray(maxSol) - center), axis) < height/2 || dot((_ray(maxSol) - center), axis) > -height/2)) {
-				 intersection_normal_arr[0] = -intersection_normal_arr[0];
-			}
-		}
-	}
+//	if (sol_num == 2) {
+//		if (sol[0] >= 0 && sol[1] >= 0) {
+//			double minSol = (sol[0]<sol[1])?sol[0]:sol[1];
+//			double maxSol = (sol[0]>sol[1])?sol[0]:sol[1];
+//			
+//			if ((dot((_ray(minSol) - center), axis) > height/2 || dot((_ray(minSol) - center), axis) < -height/2) 
+//			 && (dot((_ray(maxSol) - center), axis) < height/2 || dot((_ray(maxSol) - center), axis) > -height/2)) {
+//				 intersection_normal_arr[0] = -intersection_normal_arr[0];
+//			}
+//		}
+//	}
 	
 		
 	if (intersect_num == 0) return false;
