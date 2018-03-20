@@ -69,8 +69,12 @@ vec3 Scene::trace(const Ray& _ray, int _depth)
         return background;
     }
 
+
+    double offset_value = 1e-5;
+    vec3 offset_point = point + offset_value * normal;
+
     // compute local Phong lighting (ambient+diffuse+specular)
-    vec3 color = lighting(point, normal, -_ray.direction, object->material);
+    vec3 color = lighting(offset_point, normal, -_ray.direction, object->material);
 
 
     /** \todo
@@ -81,21 +85,17 @@ vec3 Scene::trace(const Ray& _ray, int _depth)
      * the color computed by local Phong lighting (use `object->material.mirror` as weight)
      * - check whether your recursive algorithm reflects the ray `max_depth` times
      */
-   	if (object->material.mirror == 0)
-   		return color;
-   	
-    double offset_value = 1e-5;
-    vec3 offset_point = point + offset_value * normal;
-    
-    vec3 reflectedOrigin = offset_point;
+	 
+	double reflect_rate = object->material.mirror;
+   	if (reflect_rate < 1e-4)
+   		return color;	
+
     vec3 reflectedDirection = normalize(-mirror(_ray.direction,normal));
-    
-    Ray reflectedRay(reflectedOrigin,reflectedDirection);
-    
-	vec3 reflectedColor = trace(reflectedRay,++_depth);
-     	  
-	double alpha = object->material.mirror;
-	color = (1 - alpha) * color + alpha * reflectedColor;
+    Ray reflectedRay(offset_point,reflectedDirection);
+	vec3 reflectedColor = trace(reflectedRay,_depth+1);
+	
+	color = (1 - reflect_rate) * color + reflect_rate * reflectedColor;
+	
     return color;
 }
 
@@ -140,23 +140,20 @@ vec3 Scene::lighting(const vec3& _point, const vec3& _normal, const vec3& _view,
     vec3 color = ambience * _material.ambient;
 
     //diffuse & specular
-    double offset_value = 1e-5;
-    vec3 offset_point = _point + offset_value * _normal;
-	
     Object_ptr o;
     vec3 p, n;
     double t;
 
     for(Light light : lights) {
-    	Ray r(light.position, offset_point - light.position);
-    	double ray_length = norm(offset_point - light.position);
+    	Ray r(light.position, _point - light.position);
+    	double ray_length = norm(_point - light.position);
     	if (intersect(r, o, p, n, t)) {
     		if (t > 0 && t < ray_length)
     			continue;
     	} //if shadow, continue
-    	vec3 diffuse_color = light.color * _material.diffuse * dot(_normal, normalize(light.position));
+    	vec3 diffuse_color = light.color * _material.diffuse * dot(normalize(_normal), normalize(light.position-_point));
     	vec3 specular_color = light.color * _material.specular 
-    							* pow(dot(_view, normalize(mirror(normalize(light.position), _normal))), 											_material.shininess);
+    							* pow(dot(_view, normalize(mirror(light.position-_point, _normal))), 											_material.shininess);
 
     	color += diffuse_color + specular_color;
     }
