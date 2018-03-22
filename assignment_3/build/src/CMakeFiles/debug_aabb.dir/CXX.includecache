@@ -95,6 +95,8 @@ vec3.h
 /home/eason/Desktop/EPFL_CG/assignment_3/src/Scene.cpp
 Scene.h
 /home/eason/Desktop/EPFL_CG/assignment_3/src/Scene.h
+iostream
+-
 Plane.h
 /home/eason/Desktop/EPFL_CG/assignment_3/src/Plane.h
 Sphere.h
@@ -110,10 +112,6 @@ map
 functional
 -
 stdexcept
--
-tbb/tbb.h
--
-tbb/parallel_for.h
 -
 
 /home/eason/Desktop/EPFL_CG/assignment_3/src/Scene.h

@@ -9,6 +9,7 @@
 //=============================================================================
 
 
+
 //== INCLUDES =================================================================
 
 #include "Plane.h"
@@ -37,6 +38,22 @@ intersect(const Ray& _ray,
 {
 
     // \todo Copy your assignment 1 solution here.
+    
+    //(o+td) * n = 0
+	double dot_no = dot((center - _ray.origin) , normal);
+	double dot_nd = dot(normal, _ray.direction);
+
+	if (dot_nd < 1e-7 && dot_nd > -1e-7) 
+		return false;
+	
+	_intersection_t 		= 	dot_no/dot_nd;
+	_intersection_point 	= 	_ray(_intersection_t);
+	_intersection_normal	= 	normal;
+	
+	if(dot(_intersection_normal,_ray.direction) > 0)
+		_intersection_normal = -_intersection_normal;
+
+	return (_intersection_t > 0) ? true : false;
 
     return false;
 }

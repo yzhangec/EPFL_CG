@@ -151,6 +151,24 @@ void Mesh::compute_normals()
      * - Store the vertex normals in the Vertex::normal member variable.
      * - Weigh the normals by their triangles' angles.
      */
+     
+ 	for (Triangle& t: triangles_)
+    {
+    	double w0,w1,w2;
+    	const vec3& p0 = vertices_[t.i0].position;
+        const vec3& p1 = vertices_[t.i1].position;
+        const vec3& p2 = vertices_[t.i2].position;
+    	angleWeights(p0,p1,p2,w0,w1,w2);
+    	
+    	vertices_[t.i0].normal += w0 * t.normal;
+    	vertices_[t.i1].normal += w1 * t.normal;
+    	vertices_[t.i2].normal += w2 * t.normal;
+    }
+
+	for (Vertex& v: vertices_)
+    {
+        v.normal = normalize(v.normal);
+    }
 }
 
 
@@ -172,6 +190,19 @@ void Mesh::compute_bounding_box()
 
 //-----------------------------------------------------------------------------
 
+bool intersect_box_face(const vec3& min_p, const vec3& max_p, const Ray& _ray, int axis) {
+	double t = (min_p[axis] - _ray.origin[axis])/_ray.direction[axis];
+	if (t < 0)
+		return false;
+	vec3 p = _ray(t);
+	double err = 1e-4;
+	for (int i = 0; i < 3; i++)
+		if (i != axis)
+			if (p[i] < min_p[i] - err || p[i] > max_p[i] + err)
+				return false;
+	return true;
+
+}
 
 bool Mesh::intersect_bounding_box(const Ray& _ray) const
 {
@@ -185,8 +216,17 @@ bool Mesh::intersect_bounding_box(const Ray& _ray) const
     * with all triangles of every mesh in the scene. The bounding boxes are computed
     * in `Mesh::compute_bounding_box()`.
     */
-
-    return true;
+    vec3 move_max;
+    vec3 move_min;
+	for (int axis = 0; axis < 3; axis ++) {
+		move_max = bb_max_;
+		move_max[axis] = bb_min_[axis];
+		move_min = bb_min_;
+		move_min[axis] = bb_max_[axis];
+		if (intersect_box_face(move_min, bb_max_, _ray, axis) || intersect_box_face(bb_min_, move_max, _ray, axis))
+			return true;
+	}
+	return false;
 }
 
 
@@ -258,8 +298,45 @@ intersect_triangle(const Triangle&  _triangle,
     * system for a, b and t.
     * Refer to [Cramer's Rule](https://en.wikipedia.org/wiki/Cramer%27s_rule) to easily solve it.
      */
+     
+    //a*v1 + b*v2 + t*v3 = v4
+    vec3 v1 = p0 - p2;
+    vec3 v2 = p1 - p2;
+    vec3 v3 = - _ray.direction;
+    vec3 v4 = _ray.origin - p2;
+    
+    //Cramer's Rule
+    //v1[0]*(v2[1]*v3[2]-v2[2]*v3[1])-v1[1]*(v2[0]*v3[2]-v2[2]*v3[0])+v1[2]*(v2[0]*v3[1]-v2[1]*v3[0]);
+    double det 	 = dot(cross(v1,v2),v3);
+    double a_det = dot(cross(v4,v2),v3);
+    double b_det = dot(cross(v1,v4),v3);
+    double t_det = dot(cross(v1,v2),v4);
+    
+    if (det < 1e-4 && det > -1e-4)
+    	return false;
+    
+    double a = a_det/det;
+    double b = b_det/det;
+    double c = 1 - a - b;
+    double t = t_det/det;
+    
+    if (a < 0 || b < 0 || c < 0 || t < 0)
+    	return false;
+	
+	_intersection_t = t;
+	_intersection_point = _ray(_intersection_t);
+	
+	if (draw_mode_ == FLAT) 
+			_intersection_normal = normalize(_triangle.normal);
+	else //PHONG
+			_intersection_normal = normalize(a * vertices_[_triangle.i0].normal + 
+											 b * vertices_[_triangle.i1].normal + 
+											 c * vertices_[_triangle.i2].normal);
+	
+	if (dot(_intersection_normal, _ray.direction) > 1e-2)
+    	_intersection_normal = -_intersection_normal;
 
-    return false;
+    return true;
 }
 
 

@@ -2,7 +2,7 @@
 camera  280 66 -700  430 50 -670  0 1 0  45  500 500
 
 # recursion depth
-depth  1
+depth  1	
 
 # background color
 background 0 0 0
