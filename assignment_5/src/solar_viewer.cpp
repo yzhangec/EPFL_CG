@@ -92,6 +92,30 @@ keyboard(int key, int scancode, int action, int mods)
              *    - key 9 should increase and key 8 should decrease the `dist_factor_`
              *    - 2.5 < `dist_factor_` < 20.0
              */
+             
+            case GLFW_KEY_8:
+            {
+				dist_factor_ -= 0.1f;
+				
+				if (dist_factor_ < 2.5f) 
+					dist_factor_ = 2.5f;
+					
+				//std::cout << "Dist factor is " << dist_factor_ << std::endl;
+				
+                break;
+            }
+            
+            case GLFW_KEY_9:
+            {
+                dist_factor_ += 0.1f;
+                
+                if (dist_factor_ > 20.0f)
+                	dist_factor_ = 20.0f;
+                	
+                //std::cout << "Dist factor is " << dist_factor_ << std::endl;
+                
+                break;
+            }
 
             case GLFW_KEY_R:
             {
@@ -200,6 +224,33 @@ void Solar_viewer::update_body_positions() {
      *       and earth's moon. Do not explicitly place the space ship, it's position
      *       is fixed for now.
      * */
+
+    vec4 solar_orbit_center = sun_.pos_;
+    vec4 earth_orbit_center = earth_.pos_;
+
+    //update mercury
+    vec4 mercury_relative_pos = vec4(cos(mercury_.angle_orbit_),0,-sin(mercury_.angle_orbit_),0);
+    mercury_.pos_ = solar_orbit_center + mercury_.distance_ * mercury_relative_pos;
+
+    //update venus
+    vec4 venus_relative_pos = vec4(cos(venus_.angle_orbit_),0,-sin(venus_.angle_orbit_),0);
+    venus_.pos_ = solar_orbit_center + venus_.distance_ * venus_relative_pos;
+
+    //update earth
+    vec4 earth_relative_pos = vec4(cos(earth_.angle_orbit_),0,-sin(earth_.angle_orbit_),0);
+    earth_.pos_ = solar_orbit_center + earth_.distance_ * earth_relative_pos;
+
+    //update moon
+    vec4 moon_relative_pos = vec4(cos(moon_.angle_orbit_),0,-sin(moon_.angle_orbit_),0);
+    moon_.pos_ = earth_orbit_center + moon_.distance_ * moon_relative_pos;
+
+    //update mars
+    vec4 mars_relative_pos = vec4(cos(mars_.angle_orbit_),0,-sin(mars_.angle_orbit_),0);
+    mars_.pos_ = solar_orbit_center + mars_.distance_ * mars_relative_pos;
+
+    //update stars
+    vec4 stars_relative_pos = vec4(cos(stars_.angle_orbit_),0,-sin(stars_.angle_orbit_),0);
+    stars_.pos_ = solar_orbit_center + stars_.distance_ * stars_relative_pos;
 }
 
 //-----------------------------------------------------------------------------
@@ -310,16 +361,37 @@ void Solar_viewer::paint()
      *  Hint: planet centers are stored in "Planet::pos_".
      */
     // For now, view the sun from a fixed position...
-    vec4     eye = vec4(0,0,7,1.0);
-    vec4  center = sun_.pos_;
-    vec4      up = vec4(0,1,0,0);
-    float radius = sun_.radius_;
-    mat4    view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
+    //vec4     eye = vec4(0,0,7,1.0);
+    //vec4  center = sun_.pos_;
+    //vec4      up = vec4(0,1,0,0);
+    //float radius = sun_.radius_;
+    //mat4    view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
+    
+    
+    vec4 center, eye, up;
+    float radius;
+    if (in_ship_) {
+    	center = ship_.pos_;
+    	eye = center + mat4::rotate_y(y_angle_ + ship_.angle_) * vec4(0,dist_factor_*ship_.radius_*0.85,-dist_factor_*ship_.radius_*3,0);
+    	up = mat4::rotate_y(y_angle_ + ship_.angle_) * vec4(0,1,0,0);    	
+    }
+    else {	
+		//1. get view center
+		center = planet_to_look_at_->pos_;
+		//2. calculate eye position
+		radius = planet_to_look_at_->radius_;
+		eye = center + mat4::rotate_y(y_angle_) * mat4::rotate_x(x_angle_) * vec4(0,0,dist_factor_*radius,0);
+		//3. calculate up after rotation
+		up = mat4::rotate_y(y_angle_) * mat4::rotate_x(x_angle_) * vec4(0,1,0,0);
+	}
+	
+	//4. get view mat
+	mat4 view = mat4::look_at(vec3(eye), vec3(center), vec3(up));
 
-    billboard_x_angle_ = billboard_y_angle_ = 0.0f;
+	billboard_x_angle_ = billboard_y_angle_ = 0.0f;
 
-    mat4 projection = mat4::perspective(fovy_, (float)width_/(float)height_, near_, far_);
-    draw_scene(projection, view);
+	mat4 projection = mat4::perspective(fovy_, (float)width_/(float)height_, near_, far_);
+	draw_scene(projection, view);
 
 }
 
@@ -375,6 +447,84 @@ void Solar_viewer::draw_scene(mat4& _projection, mat4& _view)
      *
      *  Hint: See how it is done for the Sun in the code above.
      */
+ 	//render STAR
+	m_matrix = mat4::translate(stars_.pos_) * mat4::rotate_y(stars_.angle_self_) * mat4::scale(stars_.radius_);
+    mv_matrix = _view * m_matrix;
+    mvp_matrix = _projection * mv_matrix;
+    color_shader_.use();
+    color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+    color_shader_.set_uniform("tex", 0);
+    color_shader_.set_uniform("greyscale", (int)greyscale_);
+    stars_.tex_.bind();
+    unit_sphere_.draw();
+
+	//render MERCURY   
+	m_matrix = mat4::translate(mercury_.pos_) * mat4::rotate_y(mercury_.angle_self_) * mat4::scale(mercury_.radius_);
+    mv_matrix = _view * m_matrix;
+    mvp_matrix = _projection * mv_matrix;
+    color_shader_.use();
+    color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+    color_shader_.set_uniform("tex", 0);
+    color_shader_.set_uniform("greyscale", (int)greyscale_);
+    mercury_.tex_.bind();
+    unit_sphere_.draw();
+    
+    //render VENUS     
+	m_matrix = mat4::translate(venus_.pos_) * mat4::rotate_y(venus_.angle_self_) * mat4::scale(venus_.radius_);
+    mv_matrix = _view * m_matrix;
+    mvp_matrix = _projection * mv_matrix;
+    color_shader_.use();
+    color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+    color_shader_.set_uniform("tex", 0);
+    color_shader_.set_uniform("greyscale", (int)greyscale_);
+    venus_.tex_.bind();
+    unit_sphere_.draw();
+    
+    //render EARTH
+	m_matrix = mat4::translate(earth_.pos_) * mat4::rotate_y(earth_.angle_self_) * mat4::scale(earth_.radius_);
+    mv_matrix = _view * m_matrix;
+    mvp_matrix = _projection * mv_matrix;
+    color_shader_.use();
+    color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+    color_shader_.set_uniform("tex", 0);
+    color_shader_.set_uniform("greyscale", (int)greyscale_);
+    earth_.tex_.bind();
+    unit_sphere_.draw();
+    
+    //render MOON     
+	m_matrix = mat4::translate(moon_.pos_) * mat4::rotate_y(moon_.angle_self_) * mat4::scale(moon_.radius_);
+    mv_matrix = _view * m_matrix;
+    mvp_matrix = _projection * mv_matrix;
+    color_shader_.use();
+    color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+    color_shader_.set_uniform("tex", 0);
+    color_shader_.set_uniform("greyscale", (int)greyscale_);
+    moon_.tex_.bind();
+    unit_sphere_.draw();
+    
+    //render MARS     
+	m_matrix = mat4::translate(mars_.pos_) * mat4::rotate_y(mars_.angle_self_) * mat4::scale(mars_.radius_);
+    mv_matrix = _view * m_matrix;
+    mvp_matrix = _projection * mv_matrix;
+    color_shader_.use();
+    color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+    color_shader_.set_uniform("tex", 0);
+    color_shader_.set_uniform("greyscale", (int)greyscale_);
+    mars_.tex_.bind();
+    unit_sphere_.draw();
+    
+    //render SHIP
+    if (in_ship_) {
+		m_matrix = mat4::translate(ship_.pos_) * mat4::rotate_y(ship_.angle_) * mat4::scale(ship_.radius_);
+		mv_matrix = _view * m_matrix;
+		mvp_matrix = _projection * mv_matrix;
+		color_shader_.use();
+		color_shader_.set_uniform("modelview_projection_matrix", mvp_matrix);
+		color_shader_.set_uniform("tex", 0);
+		color_shader_.set_uniform("greyscale", (int)greyscale_);
+		ship_.tex_.bind();
+		ship_.draw();
+    }
 
     // check for OpenGL errors
     glCheckError();
