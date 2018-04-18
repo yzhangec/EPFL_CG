@@ -38,7 +38,7 @@ void main()
 	
 	v2f_texcoord = v_texcoord;
 	v2f_normal	 = normalize(normal_matrix * v_normal);
-	v2f_light	 = vec3(light_position);
+	v2f_light	 = normalize(vec3(light_position));
 	v2f_view 	 = vec3(vec4(0,0,1,0) * modelview_matrix);
 	
 	gl_Position = modelview_projection_matrix * v_position;
