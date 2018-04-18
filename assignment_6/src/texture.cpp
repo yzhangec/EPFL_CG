@@ -99,6 +99,8 @@ bool Texture::createSunBillboardTexture()
     int width = 900;
     int height = 900;
     img.resize(width*height * 4);
+    double opacity_speed = 4.0;
+    double opacity_ratio = 0.6;
 
     /** \todo Set up the texture for the sun billboard.
     *   - Draw an opaque circle with a 150 pixel radius in its middle
@@ -109,10 +111,11 @@ bool Texture::createSunBillboardTexture()
 
     for (int col = 0; col < width; ++col) {
         for (int row = 0; row < height; ++row) {
-            img[(row * width + col) * 4 + 0] = 255; // R
-            img[(row * width + col) * 4 + 1] = 255; // G
-            img[(row * width + col) * 4 + 2] = 255; // B
-            img[(row * width + col) * 4 + 3] = 255; // A
+            img[(row * width + col) * 4 + 0] = 224; // R
+            img[(row * width + col) * 4 + 1] = 123; // G
+            img[(row * width + col) * 4 + 2] = 15; // B
+            double dist = sqrt(pow(col - 449.5, 2) + pow(row - 449.5, 2));
+            img[(row * width + col) * 4 + 3] = (dist <= 150) ? 255 : std::max(255*(1 - opacity_speed * pow((dist-150)/299.5, opacity_ratio)), 0.0); // A
         }
     }
 

@@ -9,8 +9,8 @@
 
 #version 140
 
-in vec3 v2f_normal;
 in vec2 v2f_texcoord;
+in vec3 v2f_normal;
 in vec3 v2f_light;
 in vec3 v2f_view;
 
@@ -35,6 +35,14 @@ void main()
      */
 
     vec3 color = vec3(0.0,0.0,0.0);
+    
+    vec3 ambience_color = 0.2 * sunlight * texture(tex,v2f_texcoord.st).rgb;
+    vec3 diffuse_color  = sunlight * texture(tex,v2f_texcoord.st).rgb * dot(normalize(v2f_normal), normalize(v2f_light));
+    vec3 specular_color = sunlight * texture(tex,v2f_texcoord.st).rgb * 
+    					  pow(dot(v2f_view, normalize(mirror(v2f_light, v2f_normal))),shininess);
+    color = ambience_color + 
+    		((dot(v2f_normal,v2f_light) > 0) ? diffuse_color : vec3(0.0,0.0,0.0)) + 
+    		((dot(mirror(v2f_light, v2f_normal),v2f_view) > 0) ? specular_color : vec3(0.0,0.0,0.0));
 
     // convert RGB color to YUV color and use only the luminance
     if (greyscale) color = vec3(0.299*color.r+0.587*color.g+0.114*color.b);
