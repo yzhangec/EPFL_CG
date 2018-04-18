@@ -24,7 +24,7 @@ uniform mat4 modelview_matrix;
 uniform mat3 normal_matrix;
 uniform vec4 light_position; //in eye space coordinates already
 
-
+ 
 
 void main()
 {	
@@ -35,11 +35,19 @@ void main()
       Hint: Compute the vertex position, normal and light_position in eye space.
       Hint: Write the final vertex position to gl_Position
     */
+    
+/*    vec3 translate = vec3(modelview_matrix[3][0],modelview_matrix[3][1],modelview_matrix[3][2]);*/
+/*	*/
+/*	v2f_texcoord = v_texcoord;*/
+/*	v2f_normal	 = normalize(normal_matrix * v_normal);*/
+/*	v2f_light	 = normalize(vec3(light_position + translate));*/
+/*	v2f_view 	 = normalize(translate);*/
+	vec3 translate = vec3(modelview_matrix[3][0],modelview_matrix[3][1],modelview_matrix[3][2]);
 	
 	v2f_texcoord = v_texcoord;
 	v2f_normal	 = normalize(normal_matrix * v_normal);
-	v2f_light	 = normalize(vec3(light_position));
-	v2f_view 	 = vec3(vec4(0,0,1,0) * modelview_matrix);
+	v2f_light	 = normalize(vec3(light_position) - translate);
+	v2f_view 	 = normalize(-translate);
 	
 	gl_Position = modelview_projection_matrix * v_position;
 }
