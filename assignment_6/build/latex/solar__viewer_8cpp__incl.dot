@@ -64,4 +64,5 @@ digraph "/home/eason/Desktop/EPFL_CG/assignment_6/src/solar_viewer.cpp"
   Node22 [label="time.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
   Node1 -> Node23 [color="midnightblue",fontsize="10",style="solid"];
   Node23 [label="array",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node1 -> Node17 [color="midnightblue",fontsize="10",style="solid"];
 }
