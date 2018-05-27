@@ -102,10 +102,10 @@ clean: CMakeFiles/render_shared.dir/clean
 # Target rules for target CMakeFiles/shvi.dir
 
 # All Build rule for target.
+CMakeFiles/shvi.dir/all: CMakeFiles/render_shared.dir/all
 CMakeFiles/shvi.dir/all: lib/glew/CMakeFiles/glew.dir/all
 CMakeFiles/shvi.dir/all: lib/glfw/src/CMakeFiles/glfw.dir/all
 CMakeFiles/shvi.dir/all: lib/lodePNG/CMakeFiles/lodePNG.dir/all
-CMakeFiles/shvi.dir/all: CMakeFiles/render_shared.dir/all
 	$(MAKE) -f CMakeFiles/shvi.dir/build.make CMakeFiles/shvi.dir/depend
 	$(MAKE) -f CMakeFiles/shvi.dir/build.make CMakeFiles/shvi.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/eason/Desktop/EPFL_CG/assignment_9/build/CMakeFiles --progress-num=27,28 "Built target shvi"
@@ -142,10 +142,10 @@ clean: CMakeFiles/shvi.dir/clean
 # Target rules for target CMakeFiles/terrain.dir
 
 # All Build rule for target.
+CMakeFiles/terrain.dir/all: CMakeFiles/render_shared.dir/all
 CMakeFiles/terrain.dir/all: lib/glew/CMakeFiles/glew.dir/all
 CMakeFiles/terrain.dir/all: lib/glfw/src/CMakeFiles/glfw.dir/all
 CMakeFiles/terrain.dir/all: lib/lodePNG/CMakeFiles/lodePNG.dir/all
-CMakeFiles/terrain.dir/all: CMakeFiles/render_shared.dir/all
 	$(MAKE) -f CMakeFiles/terrain.dir/build.make CMakeFiles/terrain.dir/depend
 	$(MAKE) -f CMakeFiles/terrain.dir/build.make CMakeFiles/terrain.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/eason/Desktop/EPFL_CG/assignment_9/build/CMakeFiles --progress-num=29,30 "Built target terrain"

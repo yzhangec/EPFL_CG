@@ -171,4 +171,30 @@ void Mesh::compute_normals()
     }
 
     // \todo Paste your assignment 3 vertex normal computation solution here.
+    /** \todo
+     * In some scenes (e.g the office scene) some objects should be flat
+     * shaded (e.g. the desk) while other objects should be Phong shaded to appear
+     * realistic (e.g. chairs). You have to implement the following:
+     * - Compute vertex normals by averaging the normals of their incident triangles.
+     * - Store the vertex normals in the Vertex::normal member variable.
+     * - Weigh the normals by their triangles' angles.
+     */
+     
+ 	for (Triangle& t: triangles_)
+    {
+    	double w0,w1,w2;
+    	const vec3& p0 = vertices_[t.i0].position;
+        const vec3& p1 = vertices_[t.i1].position;
+        const vec3& p2 = vertices_[t.i2].position;
+    	angleWeights(p0,p1,p2,w0,w1,w2);
+    	
+    	vertices_[t.i0].normal += w0 * t.normal;
+    	vertices_[t.i1].normal += w1 * t.normal;
+    	vertices_[t.i2].normal += w2 * t.normal;
+    }
+
+	for (Vertex& v: vertices_)
+    {
+        v.normal = normalize(v.normal);
+    }
 }

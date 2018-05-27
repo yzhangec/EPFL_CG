@@ -62,7 +62,16 @@ float perlin_noise_1d(float x) {
 	 * values using the smooth interolation polygnomial blending_weight_poly.
 	 * Note: gradients in the gradient lookup table are 2D, 
 	 */
-	return 0.0f;
+
+	int left_corner = int(floor(x));
+	float left_grad = gradients[int(mod(hash_func(mod(vec2(left_corner, 0),289)),NUM_GRADIENTS))].x;
+	float left_contribution = left_grad*(x-left_corner);
+
+	int right_corner = left_corner + 1;
+	float right_grad = gradients[int(mod(hash_func(mod(vec2(right_corner, 0),289)),NUM_GRADIENTS))].x;
+	float right_contribution = right_grad*(x-right_corner);
+
+	return mix(left_contribution, right_contribution, blending_weight_poly(x-left_corner));
 }
 
 float perlin_fbm_1d(float x) {
@@ -74,7 +83,12 @@ float perlin_fbm_1d(float x) {
 	 * successive octave.
 	 * Note: the GLSL `for` loop may be useful.
 	 */
-	return 0.0f;
+	float result = 0.0f;
+	for(int i = 0; i < num_octaves; i++) {
+		result += pow(ampl_multiplier, i) * perlin_noise_1d(x * pow(freq_multiplier, i));
+	}
+
+	return result;
 }
 
 // ----- plotting -----
@@ -122,7 +136,19 @@ float perlin_noise(vec2 point) {
 	* Implement 2D perlin noise as described in the handout.
 	* You may find a glsl `for` loop useful here, but it's not necessary.
 	**/
-	return 0.0f;
+	vec2 lower_left_corner = floor(point);
+	//corner sequence: lower_left00,upper_left01,lower_right10,upper_right11 
+	vec2 cur_corner;
+	vec2 cur_grads;
+	float[4] contributions;
+	for(int i = 0; i < 4; i++) {
+		cur_corner = lower_left_corner + vec2(i/2,i%2);
+		cur_grads = gradients[int(mod(hash_func(mod(cur_corner,289.0f)), NUM_GRADIENTS))];
+		contributions[i] = dot(point - cur_corner, cur_grads);
+	}
+	float st = mix(contributions[0], contributions[2], blending_weight_poly(point.x-lower_left_corner.x));
+	float uv = mix(contributions[1], contributions[3], blending_weight_poly(point.x-lower_left_corner.x));
+	return mix(st, uv, blending_weight_poly(point.y-lower_left_corner.y));
 }
 
 // ==============================================================
@@ -134,7 +160,13 @@ float perlin_fbm(vec2 point) {
 	 * should use the constants num_octaves, freq_multiplier, and
 	 * ampl_multiplier. 
 	 */
-	return 0.0f;
+
+	float result = 0.0f;
+	for(int i = 0; i < num_octaves; i++) {
+		result += pow(ampl_multiplier, i) * perlin_noise(point * pow(freq_multiplier, i));
+	}
+
+	return result;
 }
 
 // ==============================================================
@@ -146,7 +178,12 @@ float turbulence(vec2 point) {
 	 * Implement the 2D turbulence function as described in the handout.
 	 * Again, you should use num_octaves, freq_multiplier, and ampl_multiplier.
 	 */
-	return 0.0f;
+	float result = 0.0f;
+	for(int i = 0; i < num_octaves; i++) {
+		result += pow(ampl_multiplier, i) * abs(perlin_noise(point * pow(freq_multiplier, i)));
+	}
+
+	return result;
 }
 
 // ==============================================================
@@ -163,7 +200,12 @@ vec3 tex_map(vec2 point) {
 	 * handout. You will need to use your perlin_fbm routine and the
 	 * terrain color constants described above.
 	 */
-	return vec3(0.0f);
+	float s = perlin_fbm(point);
+	if(s <= terrain_water_level) {
+		return terrain_color_water;
+	} else {
+		return mix(terrain_color_grass, terrain_color_mountain, s - terrain_water_level);
+	}
 }
 
 // ==============================================================
@@ -178,7 +220,8 @@ vec3 tex_wood(vec2 point) {
 	 * handout. You will need to use your 2d turbulence routine and the
 	 * wood color constants described above.
 	 */
-	return vec3(0.0f);
+	float weight = 0.5 * (1 + sin(100*(length(point)+0.15*turbulence(point))));
+	return mix(brown_dark, brown_light, weight);
 }
 
 
@@ -193,6 +236,9 @@ vec3 tex_marble(vec2 point) {
 	 * handout. You will need to use your 2d turbulence routine and the
 	 * marble color constants described above.
 	 */
-	return vec3(0.0f);
+	vec2 q = vec2(perlin_fbm(point),perlin_fbm(point+vec2(1.7f,4.6f)));
+	float a = 0.5 * (1+perlin_fbm(point+4*q));
+	return mix(white, brown_dark, a);
 }
+
 
